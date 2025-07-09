@@ -25,6 +25,8 @@ shareBtn.addEventListener('click', () => {
   }
 });
 
+const uploadURL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -35,18 +37,25 @@ form.addEventListener('submit', async (e) => {
 
   submitBtn.disabled = true;
 
-  const formData = new FormData();
-  formData.append("name", document.getElementById('name').value);
-  formData.append("phone", document.getElementById('phone').value);
-  formData.append("email", document.getElementById('email').value);
-  formData.append("college", document.getElementById('college').value);
-  formData.append("screenshot", document.getElementById('screenshot').files[0]);
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const college = document.getElementById('college').value;
+  const screenshotFile = document.getElementById('screenshot').files[0];
 
-  const uploadURL = "YOUR_GOOGLE_APPS_SCRIPT_URL"; // 👈 Replace this
+  // Screenshot name only (Drive upload needs advanced config)
+  const screenshotName = screenshotFile ? screenshotFile.name : "Not uploaded";
+
+  const formData = new URLSearchParams();
+  formData.append("name", name);
+  formData.append("phone", phone);
+  formData.append("email", email);
+  formData.append("college", college);
+  formData.append("screenshot", screenshotName);
 
   await fetch(uploadURL, {
     method: "POST",
-    body: formData,
+    body: formData
   });
 
   localStorage.setItem("submitted", true);
