@@ -5,26 +5,31 @@ const form = document.getElementById('registrationForm');
 const submitBtn = document.getElementById('submitBtn');
 const thankYou = document.getElementById('thankYouMessage');
 
+// Check if already submitted
 const isSubmitted = localStorage.getItem("submitted");
-
 if (isSubmitted) {
   form.style.display = "none";
   thankYou.style.display = "block";
 }
 
+// WhatsApp sharing logic
 shareBtn.addEventListener('click', () => {
   if (shareCount < 5) {
     shareCount++;
+
     const message = encodeURIComponent("Hey Buddy, Join Tech For Girls Community!");
-    const url = `https://wa.me/?text=${message}`;
-    window.open(url, '_blank');
+    const whatsappURL = `https://wa.me/?text=${message}`;
+    window.open(whatsappURL, "_blank");
+
     shareText.innerText = `Click count: ${shareCount}/5`;
+
     if (shareCount === 5) {
       alert("Sharing complete. Please continue.");
     }
   }
 });
 
+// Form submission logic
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -35,22 +40,39 @@ form.addEventListener('submit', async (e) => {
 
   submitBtn.disabled = true;
 
-  const formData = new FormData();
-  formData.append("name", document.getElementById('name').value);
-  formData.append("phone", document.getElementById('phone').value);
-  formData.append("email", document.getElementById('email').value);
-  formData.append("college", document.getElementById('college').value);
-  formData.append("screenshot", document.getElementById('screenshot').files[0]);
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const college = document.getElementById('college').value;
+  const screenshotFile = document.getElementById('screenshot').files[0];
+  const screenshotName = screenshotFile ? screenshotFile.name : "Not uploaded";
 
-  const uploadURL = "YOUR_GOOGLE_APPS_SCRIPT_URL"; // 👈 Replace this
+  const formData = new URLSearchParams();
+  formData.append("name", name);
+  formData.append("phone", phone);
+  formData.append("email", email);
+  formData.append("college", college);
+  formData.append("screenshot", screenshotName);
 
-  await fetch(uploadURL, {
-    method: "POST",
-    body: formData,
-  });
+  const uploadURL = "https://script.google.com/macros/s/AKfycbyC8Vq12C2K08DDNz1UfcqBnCd_Cp_0bXWPNZMvWHEeVOcUTPOws-pty-d_x30tP4ny/exec";
 
-  localStorage.setItem("submitted", true);
-  form.reset();
-  form.style.display = "none";
-  thankYou.style.display = "block";
+  try {
+    await fetch(uploadURL, {
+      method: "POST",
+      body: formData,
+    });
+
+    // Save submission flag
+    localStorage.setItem("submitted", true);
+
+    // Show thank-you message
+    form.reset();
+    form.style.display = "none";
+    thankYou.style.display = "block";
+
+  } catch (error) {
+    alert("❌ Submission failed. Please try again.");
+    console.error("Error:", error);
+    submitBtn.disabled = false;
+  }
 });
