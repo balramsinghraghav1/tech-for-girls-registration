@@ -75,4 +75,8 @@ form.addEventListener('submit', async (e) => {
     console.error("Error:", error);
     submitBtn.disabled = false;
   }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> a3b3cb7c2d58ea9cd05fb772592101de2ad0d21c
