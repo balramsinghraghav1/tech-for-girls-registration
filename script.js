@@ -25,7 +25,7 @@ shareBtn.addEventListener('click', () => {
   }
 });
 
-const uploadURL = "PASTE_YOUR_WEB_APP_URL_HERE";
+const uploadURL = https://script.google.com/macros/s/AKfycbyC8Vq12C2K08DDNz1UfcqBnCd_Cp_0bXWPNZMvWHEeVOcUTPOws-pty-d_x30tP4ny/exec;
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
